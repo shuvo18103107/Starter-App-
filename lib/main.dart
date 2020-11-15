@@ -13,12 +13,12 @@ class Randomnumber extends StatefulWidget {
 
 class _RandomnumberState extends State<Randomnumber> {
   int _number = 1;
-  var _word;
+  var _word = 'SoftniqueBd';
 
   void _randomnumbergenerator() {
     setState(() {
       _number = Random().nextInt(100) + 1;
-      _word = WordPair.random();
+      _word = WordPair.random().asPascalCase.toString();
     });
   }
 
