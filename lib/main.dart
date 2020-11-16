@@ -9,6 +9,10 @@ class Startup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: Colors.redAccent,
+      ),
       title: 'StartUp Name Generator App',
       home: Randomwords(),
     );
@@ -26,6 +30,34 @@ class _RandomwordsState extends State<Randomwords> {
       Set<WordPair>(); //Set stores the word pairings that the user favorited.
 
   final _biggerFont = TextStyle(fontSize: 18.0);
+
+  void _pushSaved() {
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (BuildContext context) {
+        final tiles = _saved.map(
+          (WordPair pair) {
+            return ListTile(
+              title: Text(
+                pair.asPascalCase,
+                style: _biggerFont,
+              ),
+            );
+          },
+        );
+        final divided = ListTile.divideTiles(
+          context: context,
+          tiles: tiles,
+        ).toList();
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Saved Suggestions'),
+          ),
+          body: ListView(children: divided),
+        );
+      },
+    ));
+  }
 
   Widget _buildRow(WordPair pair) {
     final alreadySaved = _saved.contains(
@@ -81,6 +113,9 @@ class _RandomwordsState extends State<Randomwords> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
+        ],
       ),
       body: _buildSuggestions(),
     );
