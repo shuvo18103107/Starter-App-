@@ -1,73 +1,88 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
-import 'dart:math';
 
 void main() {
-  runApp(Randomnumber());
+  runApp(Startup());
 }
 
-class Randomnumber extends StatefulWidget {
+class Startup extends StatelessWidget {
   @override
-  _RandomnumberState createState() => _RandomnumberState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'StartUp Name Generator App',
+      home: Randomwords(),
+    );
+  }
 }
 
-class _RandomnumberState extends State<Randomnumber> {
-  int _number = 1;
-  var _word = 'SoftniqueBd';
+class Randomwords extends StatefulWidget {
+  @override
+  _RandomwordsState createState() => _RandomwordsState();
+}
 
-  void _randomnumbergenerator() {
-    setState(() {
-      _number = Random().nextInt(100) + 1;
-      _word = WordPair.random().asPascalCase.toString();
-    });
+class _RandomwordsState extends State<Randomwords> {
+  final _suggestions = <WordPair>[];
+  final _saved =
+      Set<WordPair>(); //Set stores the word pairings that the user favorited.
+
+  final _biggerFont = TextStyle(fontSize: 18.0);
+
+  Widget _buildRow(WordPair pair) {
+    final alreadySaved = _saved.contains(
+        pair); //alreadySaved check to ensure that a word pairing has not already been added to favorites.means still user not tap on this word
+    return ListTile(
+      title: Text(
+        pair.asPascalCase,
+        style: _biggerFont,
+      ),
+      trailing: Icon(
+        // NEW from here...
+        alreadySaved ? Icons.favorite : Icons.favorite_border,
+        color: alreadySaved ? Colors.red : null,
+      ),
+      onTap: () {
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(
+                pair); // user already save kore rakhce abar tap korle save variable theke oita remove
+          } else {
+            _saved.add(
+                pair); //user choose korlo magar eita save variable set e nai
+          }
+        });
+      },
+    );
+  }
+
+  Widget _buildSuggestions() {
+    return ListView.builder(
+        padding: EdgeInsets.all(16.0),
+        itemBuilder: /*1*/ (context, i) {
+          if (i.isOdd) return Divider(); /*2*/
+          //print(i);
+
+          final index = i ~/ 2; /*3*/
+
+          if (index >= _suggestions.length) {
+            _suggestions.addAll(generateWordPairs().take(10));
+            /*4*/
+          }
+          return _buildRow(_suggestions[index]);
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Random Number Generator'),
-        ),
-        body: SafeArea(
-            child: Column(
-          children: <Widget>[
-            Expanded(
-                flex: 5,
-                child: Center(
-                    child: Text(
-                  'Random Number : $_number',
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontSize: 25,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ))),
-            Expanded(
-              flex: 5,
-              child: Center(
-                child: Text(
-                  'Company Name : $_word',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 25,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            )
-          ],
-        )),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _randomnumbergenerator,
-          child: Icon(
-            Icons.autorenew,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'StartUp App',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
           ),
-          backgroundColor: Colors.red,
         ),
       ),
+      body: _buildSuggestions(),
     );
   }
 }
