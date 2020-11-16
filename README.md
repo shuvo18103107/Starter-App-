@@ -2,4 +2,4 @@
 You’ll implement a simple app that generates proposed names for a startup company. The user can select and unselect names, saving the best ones. The code lazily generates 10 names at a time. As the user scrolls, more names are generated. There is no limit to how far a user can scroll.
 
 
-![Starter App - Animated gif demo](Starter-App-/screenshots/startup_app.gif)
+<img src="Starter-App-/screenshots/startup_app.gif" height="300em" />
